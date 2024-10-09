@@ -1,7 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {Link} from "react-router-dom";
-
+import { useSelector } from 'react-redux';
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -11,6 +11,7 @@ const navigation = [
 ]
 
 export default function Navbar({currentPage}) {
+  const currentEvent = useSelector(state => state.event.currentEvent);
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto  px-2 sm:px-6 lg:px-8">
@@ -25,19 +26,14 @@ export default function Navbar({currentPage}) {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex flex-shrink-0 items-center">
-              <img
-                alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto"
-              />
-            </div>
+            
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
+                {currentEvent && <a className='bg-neutral-100 text-black px-3 py-2 rounded-md text-sm font-medium'>{currentEvent.name}</a>} 
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     aria-current={item.name === currentPage ? 'page' : undefined}
                     className={classNames(
                       item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -45,20 +41,14 @@ export default function Navbar({currentPage}) {
                     )}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
+           
+           
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
