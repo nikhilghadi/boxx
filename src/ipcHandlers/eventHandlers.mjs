@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import { createEvent, getAllEvents } from '../database/eventModel.mjs';
+import { createEvent, getAllEvents, destroyEvent } from '../database/eventModel.mjs';
 
 // IPC handler to create an event
-ipcMain.handle('save-event', async (eventData) => {
+ipcMain.handle('save-event', async (a,eventData) => {
   try {
     const result = await createEvent(eventData);
     return result;
@@ -19,6 +19,16 @@ ipcMain.handle('get-events', async () => {
     return events;
   } catch (error) {
     console.error('Error fetching events:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('delete-event', async (a,eventId) => {
+  try {
+    const result = await destroyEvent(eventId);
+    return result;
+  } catch (error) {
+    console.error('Error deleting event:', error);
     throw error;
   }
 });

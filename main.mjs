@@ -1,9 +1,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import isDev from 'electron-is-dev';
-import sqlite3 from'sqlite3';
 import { fileURLToPath } from 'url';
 import './src/ipcHandlers/eventHandlers.mjs'
+import './src/ipcHandlers/teamHandlers.mjs'
+
 import { readFileSync } from 'fs';
 import {initDb} from './src/database/dbConnection.mjs';
 
@@ -74,33 +75,13 @@ app.whenReady().then(async () => {
   createWindow();
 });
 
-// app.on('ready', createWindow);
 
-// IPC handlers for database operations
-// ipcMain.handle('save-event', async (event, eventData) => {
-//   const { name, subtitle, city, date, location } = eventData;
-//   const insert = db.prepare('INSERT INTO events (name,subtitle,city, location, date) VALUES (?, ?, ?, ?, ?)');
-//   insert.run(name,subtitle, city, location, date);
-//   return { success: true };
-// });
-
-// ipcMain.handle('get-events', async () => {
-//   return new Promise((resolve, reject) => {
-//     db.all('SELECT * FROM events', [], (err, rows) => {
-//       if (err) {
-//         console.error('Error fetching events:', err);
-//         reject(err);
-//       } else {
-//         console.log('Events:', rows);  // Log the fetched events
-//         resolve(rows);  // Return the fetched rows
-//       }
-//     });
-//   });
-// });
-
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     app.quit();
+    const db = await initDb();
+    db.close();
+
   }
 });
 

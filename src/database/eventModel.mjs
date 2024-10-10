@@ -3,12 +3,20 @@ import {initDb} from './dbConnection.mjs';
 // Event model methods
 export const createEvent = async (eventData) => {
   const db = await initDb();
-  const { name, subtitle, city, date, location } = eventData;
-  const result = await db.run(
-    'INSERT INTO events (name,subtitle,city, location, date) VALUES (?, ?, ?, ?, ?)',
-    [name,subtitle, city, location, date]
-  );
-  return result;
+  const {id, name, subtitle, city, date, location } = eventData;
+  if (!id) {
+    const result = await db.run(
+      'INSERT INTO events (name,subtitle,city, location, date) VALUES (?, ?, ?, ?, ?)',
+      [name,subtitle, city, location, date]
+    );
+  }
+  else{
+    const result = await db.run(
+      'UPDATE events SET name =?, subtitle =?, city =?, location =?, date =? WHERE id =?',
+      [name,subtitle, city, location, date, id]
+    );
+  }
+  return {};
 };
 
 export const getAllEvents = async () => {
@@ -27,4 +35,10 @@ export const getAllEvents = async () => {
   });
   })
   // return rows;
+};
+
+export const destroyEvent = async (id) => {
+  const db = await initDb();
+  const result = await db.run('DELETE FROM events WHERE id =?', [id]);
+  return result;
 };

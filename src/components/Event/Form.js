@@ -1,22 +1,22 @@
 import React from 'react'
 import { useState } from 'react'
 export default function Form({event,formModal}) {
-  const [formData, setFormData] = useState({name:event.name,subtitle:event.subtitle,city:event.city,location:event.location, date:event.date,tournament_organisation_auto:event.tournament_organisation_auto,symmetrical_draw:event.symmetrical_draw,number_of_rounds:event.number_of_rounds,rest_time:event.rest_time,num_of_judges:event.num_of_judges,})
+  const [formData, setFormData] = useState({id:event.id,name:event.name,subtitle:event.subtitle,city:event.city,location:event.location, date:event.date,tournament_organisation_auto:event.tournament_organisation_auto,symmetrical_draw:event.symmetrical_draw,number_of_rounds:event.number_of_rounds,rest_time:event.rest_time,num_of_judges:event.num_of_judges,})
   const handleChange=(e)=>{
     const {id,value}=e.target
     setFormData({...formData, [id]: value})
   }
   const handleSumbmit= async(e)=>{
     e.preventDefault()
-    console.log(formData)
     const result = await window.api.saveEvent(formData);
-    if (result.success) {
+    if (result) {
       alert('Event saved successfully!');
       formModal.onClose()
     } else {
       alert('Error saving event!');
     }
   }
+  console.log(event)
   return (
     <div>
       <form action="#">

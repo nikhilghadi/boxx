@@ -7,19 +7,39 @@ import {
 import Form from './Form'
 import { useState } from 'react'
 import Table from '../Table/Table'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { selectEvent } from '../../redux/eventSlice'
 import EditButton from '../buttons/EditButton'
+import DeleteButton from '../buttons/DeleteButton'
 import PlayButton from '../buttons/PlayButton'
+import ConfirmationBox from '../modal/ConfirmationBox'
 export default function Index() {
   const formModal = useDisclosure()
+  const deleteModal = useDisclosure()
   const [event, setEvent] = useState({name:"",subtitle:"",city:"",location:"", date:"",tournament_organisation_auto:false,symmetrical_draw:false,number_of_rounds:3,rest_time:60,num_of_judges:3 })
   const [events, setEvents] = useState([])
+  const [deleteEvent, setDeleteEvent] = useState(null)
   const dispatch = useDispatch()
   
   useEffect(() => {
    fetchData()
   }, [])
+  const handleDelete = (event, isConfirmed) => { 
+    if (isConfirmed) {
+      const result =  window.api.deleteEvent(deleteEvent.id)
+      result.then(data => {
+        deleteModal.onClose()
+        fetchData()
+      setDeleteEvent(null)
+
+      })
+    }
+    else{
+      setDeleteEvent(event)
+      deleteModal.onOpen()
+    }
+   
+  }
   function getData() {  
     return events.map((event, index) => {
       return [
@@ -31,8 +51,8 @@ export default function Index() {
 
         <div className='flex justify-center items-center float-start'>
           <EditButton  handleClick={()=>handleEdit(event)} />
+          <DeleteButton  handleClick={()=> handleDelete(event, false)} />
           <PlayButton  handleClick={()=>dispatch(selectEvent(event))} />
-         
           </div>
       ]
     })
@@ -54,7 +74,7 @@ export default function Index() {
   function fetchData() {
     const result =  window.api.getEvents()
     result.then(data => {
-      //  console.log(data)    
+       console.log(data)    
       setEvents(data)
     })
   }
@@ -78,6 +98,8 @@ export default function Index() {
       <ChakraModal title={ 'Add New Event'} onClose={formModal.onClose} isOpen={formModal.isOpen}>
         <Form event={event} setEvent={setEvent} formModal={formModal} />
       </ChakraModal>
+      <ConfirmationBox title={'Delete Event'} onClose={deleteModal.onClose} isOpen={deleteModal.isOpen} message={'Are you sure you want to delete this Event?'} onConfirm={()=>handleDelete(null, true)}/>
+
     </div>
   )
 }
