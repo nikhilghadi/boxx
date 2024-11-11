@@ -4,7 +4,9 @@ import isDev from 'electron-is-dev';
 import { fileURLToPath } from 'url';
 import './src/ipcHandlers/eventHandlers.mjs'
 import './src/ipcHandlers/teamHandlers.mjs'
-
+import './src/ipcHandlers/weightClassHandler.mjs'
+import './src/ipcHandlers/athleteHandlers.mjs'
+import './src/ipcHandlers/officialHandlers.mjs'
 import { readFileSync } from 'fs';
 import {initDb} from './src/database/dbConnection.mjs';
 

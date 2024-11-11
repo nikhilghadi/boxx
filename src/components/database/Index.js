@@ -4,9 +4,10 @@ import { UserGroupIcon } from '@heroicons/react/24/outline'
 import Teams from './teams/Index'
 import Weights from './weights/Index'
 import Atheletes from './atheletes/Index'
+import Official from './officials/Index'
 
 export default function Index() {
-  const options = [{name: 'Teams' , icon: <UserGroupIcon className='h-6 w-6'/>, component: <Teams />},{name:'Weights', icon: <img className='h-6 w-6' src="https://img.icons8.com/ios/50/weight-kg.png" alt="weight-kg"/>, component: <Weights />},{name:'Atheletes', icon: <img className='h-6 w-6' src="https://img.icons8.com/ios/50/athlete.png" alt="athlete"/>, component: <Atheletes />}]
+  const options = [{name: 'Teams' , icon: <UserGroupIcon className='h-6 w-6'/>, component: <Teams />},{name:'Weights', icon: <img className='h-6 w-6' src="https://img.icons8.com/ios/50/weight-kg.png" alt="weight-kg"/>, component: <Weights />},{name:'Atheletes', icon: <img className='h-6 w-6' src="https://img.icons8.com/ios/50/athlete.png" alt="athlete"/>, component: <Atheletes />}, {name:'Officials', icon: <img className='h-6 w-6' src="https://img.icons8.com/quill/100/referee.png" alt="referee"/>, component: <Official />}]
   const [currentOption, setCurrentOption] = useState(0)
   return (
     <div className='flex flex-row'>
