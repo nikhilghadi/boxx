@@ -6,7 +6,7 @@ export default function Form({athlete,formModal, fetchData}) {
   const [formData, setFormData] = useState({id:athlete.id,first_name:athlete.first_name,last_name:athlete.last_name,dob:athlete.dob,age:athlete.age, gender:athlete.gender,weight:athlete.weight,height:athlete.height,hand:athlete.hand,weight_class_id:athlete.weight_class_id,team_id:athlete.team_id,event_id: athlete.event_id})
   const [teams, setTeams] = useState([])
   const [weightClasses, setWeightClasses] = useState([])
-
+  const [genderWiseWeightClasses, setGenderWiseWeightClasses] = useState([]) 
   const fetchTeams = async () => {
     const result = await window.api.getTeams(athlete.event_id) || []
     setTeams(result)
@@ -22,11 +22,16 @@ export default function Form({athlete,formModal, fetchData}) {
     fetchWeightClasses()
   }, [])
 
+  const genderChanged=(gender)=>{
+    setGenderWiseWeightClasses([...weightClasses.filter((a)=> a.gender == gender)])
+  }
   const handleChange=(e)=>{
     const {id,value}=e.target
     setFormData({...formData, [id]: value})
     if(id=="dob"){      
       setFormData((prevState)=>({...prevState, age: getAge(value)}))
+    }else if(id == 'gender'){
+      genderChanged(value)
     }
   }
   
@@ -106,7 +111,7 @@ export default function Form({athlete,formModal, fetchData}) {
                 color='black'
                 placeholder='Select a Weight Class'
                 >
-                {weightClasses.map((c)=>{
+                {genderWiseWeightClasses.map((c)=>{
                   return (
                     <option value={c.id}>{c.label}</option>
                   )
