@@ -61,6 +61,7 @@ export default function Index() {
     const result = window.api.getAthletes(currentEvent.id)
     result.then(data => {
       setAthletes(data || [])
+      setAthlete({event_id:currentEvent?.id})
     })
   }
   const headers =['Sr No','Name', 'Age', 'Gender', 'Weight', 'Class','Team', 'Action']

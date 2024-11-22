@@ -19,13 +19,15 @@ export const createAthlete = async (athleteData) => {
   // return result;
 };
 
-export const getAllAthletes = async (event_id) => {
+export const getAllAthletes = async (event_id, weight_class_id=null) => {
   const db = await initDb();
-  return new Promise((resolve, reject) => {
-    db.all(`select athletes.*, weight_classes.label as weight_class, teams.name as team_name
-  from (select * from athletes where athletes.event_id = ${event_id} ) as athletes left join
+  let query = `select athletes.*, weight_classes.label as weight_class, teams.name as team_name
+  from (select * from athletes where athletes.event_id = ${event_id} ${weight_class_id ? (' and athletes.weight_class_id = '+ weight_class_id) : '' } )  as athletes left join
  weight_classes on athletes.weight_class_id = weight_classes.id
- left join teams on athletes.team_id = teams.id `, [], (err, rows) => {
+ left join teams on athletes.team_id = teams.id `
+ console.log("Query",query)
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
     if (err) {
       console.error('Error fetching Athletes:', err);
       reject(err);

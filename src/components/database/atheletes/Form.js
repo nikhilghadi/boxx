@@ -47,7 +47,7 @@ export default function Form({athlete,formModal, fetchData}) {
     //   alert('Error saving athlete!');
     // }
   }
-  console.log(formData)
+  console.log(formData,weightClasses)
   return (
     <div>
       <form action="#">

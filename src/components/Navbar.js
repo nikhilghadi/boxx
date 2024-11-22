@@ -8,6 +8,7 @@ function classNames(...classes) {
 const navigation = [
   { name: 'Events', href: '/'  },
   { name: 'Database', href: '/database' },
+  { name: 'Run Bout', href: '/run_bout' },
 ]
 
 export default function Navbar({currentPage}) {

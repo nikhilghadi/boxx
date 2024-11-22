@@ -70,6 +70,9 @@ function createWindow() {
   );
 
   mainWindow.on('closed', () => (mainWindow = null));
+  // mainWindow.once("ready-to-show", () => {
+    mainWindow.maximize();  
+  // });
 }
 
 app.whenReady().then(async () => {
