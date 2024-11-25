@@ -31,3 +31,11 @@ export const getDraw =(numberOfPlayers)=>{
 export const isPowerOfTwo=(n)=> {
   return n > 0 && (Math.log2(n) % 1 === 0);
 }
+
+export const truncateString=(str, num = 10)=> {  
+  if (str.length > num) {
+      return str.slice(0, num) + "...";
+  } else {
+      return str;
+  }
+}

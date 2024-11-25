@@ -17,4 +17,5 @@ contextBridge.exposeInMainWorld('api', {
   getOfficials: (event_id)=> ipcRenderer.invoke('get-officials',event_id),
   saveOfficial: (officialData) => ipcRenderer.invoke('save-official', officialData),
   deleteOfficial: (official_id) => ipcRenderer.invoke('delete-official', official_id),
+  saveDraw: (drawData) => ipcRenderer.invoke('save-draw', drawData),
 });

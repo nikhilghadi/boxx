@@ -61,3 +61,24 @@
       event_id INTEGER,
       FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
     );
+create table if not EXISTS draws (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      round_number INTEGER,
+      bout_number INTEGER,
+      event_id INTEGER,
+      weight_class_id INTEGER,
+      is_bout_complete boolean,
+      FOREIGN KEY (weight_class_id) REFERENCES weight_classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+    );
+
+    create table if not EXISTS draw_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      athlete_id INTEGER,
+      draw_id INTEGER,
+      position INTEGER,
+      seed INTEGER,
+      is_winner boolean,
+      FOREIGN KEY (athlete_id) REFERENCES athletes(id) ON DELETE CASCADE,
+      FOREIGN KEY (draw_id) REFERENCES draws(id) ON DELETE CASCADE
+    );

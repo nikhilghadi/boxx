@@ -3,6 +3,7 @@ import { getDraw, isPowerOfTwo } from '../../../utilities/common'
 // import { Bracket, RoundProps } from 'react-brackets';
 import Bracket from '../../draw_table/Bracket'
 import { useSelector } from 'react-redux'
+import { truncateString } from '../../../utilities/common'
 export default function Index() {
   const [numberOfPlayers, setNumberOfPlayers] = useState(0)
   const [byes, setByes] = useState(0)
@@ -47,20 +48,23 @@ export default function Index() {
   },[])
 
   const getPlayerName = (index,color)=>{
-    let obj = (shuffledPlayers[index-1] || {first_name: color, last_name: ''})
-    // console.log("plae",index-1,shuffledPlayers[index-1], shuffledPlayers )
+    let obj = (shuffledPlayers[index-1])
+    if (obj?.id)
+      obj = {...obj, draw_number: index, color: color}
+    console.log("plae",index-1,shuffledPlayers[index-1], obj )
     setAthleteIndex(atheleteIndex+1)
     return obj
   }
   const createRound=(roundNumber, bouts, byes,next_round_start)=>{
     let seeds = []
-    let round = {roundName: `Round ${roundNumber}`}
+    let round = {roundName: `Round ${roundNumber}`, round_number: roundNumber}
     let isByePresent = (byes > 0 && roundNumber == 2 && !(numberOfPlayers%2==0))
     // console.log("df ",roundNumber,atheleteIndex,next_round_start)
     let counter = 0
     for(let i = 0; i < bouts; i++){
       let seed =  {
-          id: 1,
+          id: i,
+          bout_number: i+1,
           players:((isByePresent && i == bouts-1) ? [getPlayerName(next_round_start+counter,'Red')] : [getPlayerName(next_round_start+counter,'Red') , getPlayerName(next_round_start+counter+1,'Blue')])
         }
        seeds.push(seed)
@@ -89,6 +93,18 @@ export default function Index() {
     }
     setDraws((ps)=>({...ps, [currentWeightClass.id]:matches }))
   }
+  const saveDraw=()=>{    
+    let draw = {
+      event_id: currentEvent.id,
+      weight_class_id: currentWeightClass.id,
+      draws: draws[currentWeightClass.id]
+    }
+    console.log(draw)
+    const result = window.api.saveDraw(draw)
+    result.then(data => {
+      console.log(data)
+    })
+  }
   return (
     <div>
       <div className='flex justify-between mb-3'>
@@ -101,6 +117,8 @@ export default function Index() {
           })
         }</div>
           {currentEvent && <button className='border-2 border-rose-500 rounded-lg p-1' onClick={createDraw}>Create Draw</button>}
+          {currentEvent && <button className='border-2 border-rose-500 rounded-lg p-1' onClick={saveDraw}>Save Draw</button>}
+
       </div>
     
       <div className='flex '>
@@ -111,12 +129,13 @@ export default function Index() {
           </div>
           <Bracket rounds={draws[currentWeightClass.id]||[]} />
         </div>
-        <div className='w-1/5 bg-green-200 p-4 text-left'>
-          <div className='text-center font-bold'>Atheletes</div>
+        <div className='w-1/5 bg-green-200 pt-4 pl-2 pr-2 text-left'>
+          <div className='text-center font-bold w-full'>Atheletes</div>
+          <hr className='mb-2 bg-slate-700 w-full ' style={{height: '1px'}}  />
           {
             atheletes.map((athelete, index)=>{
               return <div key={`athelete_${index}`}>
-               {athelete.team_name}: {athelete.first_name + " " + athelete.last_name}
+               {truncateString(athelete.team_name,8)}: {truncateString(athelete.first_name + " " + athelete.last_name,15)}
               </div>
             })
           }

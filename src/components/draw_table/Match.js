@@ -6,13 +6,22 @@ const Match = ({ match, roundNumber, matchNumber, boutsInRound }) => {
   return (
     <div className="bg-gray-100  p-4 w-40 h-25 flex flex-col justify-between items-center border rounded-lg shadow-md relative">
       {/* {matchNumber} */}
+      {match?.bout_number && <span className='absolute top-0 left-0 '>{match?.bout_number}.  </span> || ''}
+
       {match.players.map((player, index) => (
         <> 
           <div
             key={index}
-            className={`w-full text-center m-1 ${index === 0 ? 'bg-red-500' : 'bg-blue-500'}`}
+            className={`w-full flex m-1 ${index === 0 ? 'bg-red-500' : 'bg-blue-500'}`}
           >
-            {player.first_name + " " + player.last_name}
+            {
+             player?.draw_number  &&  <span className='ml-1'> {player?.draw_number}.  </span> || ''
+            }
+            <span className= 'w-full cursor-pointer' title={(player?.first_name || '') + ' ' + (player?.last_name || '')}>
+            {(((player?.first_name) || (index ===0 ? "Red" : "Blue")) + " " + (player?.last_name || '')).slice(0, 10)}
+            {(((player?.first_name) || (index ===0 ? "Red" : "Blue")) + " " + (player?.last_name||'')).length > 10 && "..."}
+            </span>
+          
           </div>
         </>
       ))}
